@@ -7,8 +7,8 @@ import {
 import { createClient } from '@supabase/supabase-js';
 import { useAuth } from '../contexts/AuthContext';
 
-const SUPABASE_URL = 'https://vxlexqupgwxztiaxudsm.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4bGV4cXVwZ3d4enRpYXh1ZHNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1MzE3MTEsImV4cCI6MjA4NzEwNzcxMX0.FsKJ6f8owtKPvWFRpm_yRIJZrL2qI7TqHioViQanx7M';
+const SUPABASE_URL = import.meta.env.SUPABASE_URL;
+const SUPABASE_ANON = import.meta.env.SUPABASE_ANON;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
 const BUCKET = 'driver-photos';
 
