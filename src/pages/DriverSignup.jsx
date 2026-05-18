@@ -7,8 +7,8 @@ import {
 import { createClient } from '@supabase/supabase-js';
 import { useAuth } from '../contexts/AuthContext';
 
-const SUPABASE_URL = import.meta.env.SUPABASE_URL;
-const SUPABASE_ANON = import.meta.env.SUPABASE_ANON;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_ANON;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
 const BUCKET = 'driver-photos';
 
