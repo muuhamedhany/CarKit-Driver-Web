@@ -6,11 +6,11 @@ import { API_URL, useAuth } from '../contexts/AuthContext';
 
 export default function DriverActiveOrder() {
   const { headers } = useAuth();
-  const [order, setOrder]         = useState(null);
-  const [proof, setProof]         = useState('');
-  const [preview, setPreview]     = useState('');
-  const [notes, setNotes]         = useState('');
-  const [message, setMessage]     = useState('');
+  const [order, setOrder] = useState(null);
+  const [proof, setProof] = useState('');
+  const [preview, setPreview] = useState('');
+  const [notes, setNotes] = useState('');
+  const [message, setMessage] = useState('');
   const [completing, setCompleting] = useState(false);
 
   const load = async () => {
@@ -80,37 +80,6 @@ export default function DriverActiveOrder() {
       <div className="detail-grid">
 
         <article className="panel app-soft-card">
-          <div className="panel-accent" />
-          <div className="panel-body padded-left">
-
-            <h3 className="section-label purple">
-              <User size={12} /> Customer Details
-            </h3>
-            <p className="item-title">{order.customer_name}</p>
-            <p className="meta-line">
-              <Phone size={13} style={{ flexShrink: 0 }} /> {order.customer_phone}
-            </p>
-            <p className="meta-line">
-              <MapPin size={13} style={{ flexShrink: 0, marginTop: 2 }} />
-              {[order.shipping_street, order.shipping_city].filter(Boolean).join(', ')}
-            </p>
-
-            <div className="divider-soft">
-              <h3 className="section-label blue">
-                <Package size={12} /> Order Items
-              </h3>
-              <ul className="item-list compact-list">
-                {(order.items || []).map((item) => (
-                  <li key={item.order_item_id} style={{ fontSize: 'var(--text-sm)' }}>
-                    <span style={{ fontWeight: 700, color: 'var(--accent-blue)' }}>{item.quantity}x</span> {item.product_name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </article>
-
-        <article className="panel app-soft-card">
           <MapTracker lat={order.shipping_latitude} lng={order.shipping_longitude} label="Customer location" />
 
           <div style={{ marginTop: 16 }}>
@@ -157,6 +126,37 @@ export default function DriverActiveOrder() {
                 <CheckCircle2 size={16} />
                 {completing ? 'Completing...' : 'Mark as Delivered'}
               </button>
+            </div>
+          </div>
+        </article>
+
+        <article className="panel app-soft-card">
+          <div className="panel-accent" />
+          <div className="panel-body padded-left">
+
+            <h3 className="section-label purple">
+              <User size={12} /> Customer Details
+            </h3>
+            <p className="item-title">{order.customer_name}</p>
+            <p className="meta-line">
+              <Phone size={13} style={{ flexShrink: 0 }} /> {order.customer_phone}
+            </p>
+            <p className="meta-line">
+              <MapPin size={13} style={{ flexShrink: 0, marginTop: 2 }} />
+              {[order.shipping_street, order.shipping_city].filter(Boolean).join(', ')}
+            </p>
+
+            <div className="divider-soft">
+              <h3 className="section-label blue">
+                <Package size={12} /> Order Items
+              </h3>
+              <ul className="item-list compact-list">
+                {(order.items || []).map((item) => (
+                  <li key={item.order_item_id} style={{ fontSize: 'var(--text-sm)' }}>
+                    <span style={{ fontWeight: 700, color: 'var(--accent-blue)' }}>{item.quantity}x</span> {item.product_name}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </article>

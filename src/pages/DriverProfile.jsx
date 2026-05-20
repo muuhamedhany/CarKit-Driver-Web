@@ -5,7 +5,7 @@ import { API_URL, useAuth } from '../contexts/AuthContext';
 
 export default function DriverProfile() {
   const { headers, user, refreshProfile, logout } = useAuth();
-  const [form, setForm]   = useState(user || {});
+  const [form, setForm] = useState(user || {});
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -45,7 +45,7 @@ export default function DriverProfile() {
 
   const statusColor =
     approvalStatus === 'approved' ? 'var(--accent-green)' :
-    approvalStatus === 'pending'  ? '#fdba74' : '#fca5a5';
+      approvalStatus === 'pending' ? '#fdba74' : '#fca5a5';
 
   return (
     <div className="page-stack">
@@ -92,7 +92,7 @@ export default function DriverProfile() {
             <span>Plate</span>
             <strong>{vehiclePlate}</strong>
           </div>
-          </div>
+        </div>
       </div>
 
       <div className="panel app-soft-card profile-edit-card">
@@ -103,10 +103,10 @@ export default function DriverProfile() {
           </h3>
 
           <div className="form-grid">
-            <Field label="Full Name"    value={form.full_name || form.name || ''} onChange={set('full_name')} />
-            <Field label="Phone Number" value={form.phone || ''}                  onChange={set('phone')} />
-            <Field label="Vehicle Type" value={form.vehicle_type || ''}           onChange={set('vehicle_type')} />
-            <Field label="Vehicle Plate" value={form.vehicle_plate || ''}         onChange={set('vehicle_plate')} />
+            <Field label="Full Name" value={form.full_name || form.name || ''} onChange={set('full_name')} />
+            <Field label="Phone Number" value={form.phone || ''} onChange={set('phone')} />
+            <Field label="Vehicle Type" value={form.vehicle_type || ''} onChange={set('vehicle_type')} />
+            <Field label="Vehicle Plate" value={form.vehicle_plate || ''} onChange={set('vehicle_plate')} />
           </div>
         </div>
       </div>
