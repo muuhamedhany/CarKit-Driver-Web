@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AlertCircle, Eye, EyeOff, KeyRound, Loader2, Mail, Truck, Wrench, Zap } from 'lucide-react';
+import { AlertCircle, BadgeCheck, Eye, EyeOff, KeyRound, Loader2, Mail, ShieldCheck, Truck, Wrench, Zap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
@@ -37,6 +37,7 @@ export default function Login() {
 
   return (
     <div className="auth-page" style={{ '--mode-accent': modeAccent }}>
+      <div className="auth-grid-overlay" />
       <div className="auth-shell animate-fade-in">
         <header className="auth-brand">
           <div className="auth-brand-row">
@@ -48,9 +49,17 @@ export default function Login() {
           </div>
         </header>
 
-        <section className={`auth-card auth-card-${gateway === 'driver' ? 'driver' : 'emergency'}`}>
-          <h2 className="auth-card-title">Sign In</h2>
-          <p className="auth-card-copy">Choose your workspace and continue.</p>
+        <section className={`auth-card auth-card-${gateway === 'driver' ? 'driver' : 'emergency'} auth-login-card`}>
+          <div className="auth-card-heading">
+            <div>
+              <span className="auth-eyebrow">Secure access</span>
+              <h2 className="auth-card-title">Sign In</h2>
+              <p className="auth-card-copy">Choose your workspace and continue.</p>
+            </div>
+            <div className="auth-heading-icon" aria-hidden="true">
+              {gateway === 'driver' ? <Truck size={22} /> : <Wrench size={22} />}
+            </div>
+          </div>
 
           <div className="gateway-tabs">
             <button
@@ -96,7 +105,7 @@ export default function Login() {
                   type={showPassword ? 'text' : 'password'}
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  placeholder="••••••••••••"
+                  placeholder="Enter your password"
                   className="has-action"
                   required
                 />
@@ -131,6 +140,17 @@ export default function Login() {
               )}
             </button>
           </form>
+
+          <div className="auth-assurance-grid">
+            <div>
+              <ShieldCheck size={16} />
+              <span>Encrypted session</span>
+            </div>
+            <div>
+              <BadgeCheck size={16} />
+              <span>{gateway === 'driver' ? 'Driver verified' : 'Provider managed'}</span>
+            </div>
+          </div>
 
           {gateway === 'driver' ? (
             <div className="auth-link-row">

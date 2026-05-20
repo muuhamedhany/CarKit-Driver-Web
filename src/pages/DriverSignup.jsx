@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   AlertCircle, ArrowLeft, Camera, CheckCircle2,
-  IdCard, Loader2, RefreshCcw, Upload, User, X
+  ClipboardCheck, IdCard, Loader2, LockKeyhole, RefreshCcw, ShieldCheck, Truck, Upload, User, X
 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { useAuth } from '../contexts/AuthContext';
@@ -211,12 +211,14 @@ export default function DriverSignup() {
 
   return (
     <div className="auth-page">
+      <div className="auth-grid-overlay" />
       <div className="auth-shell signup animate-fade-in">
         <header className="auth-topbar">
           <Link to="/login" className="auth-back" aria-label="Back to login">
             <ArrowLeft size={18} />
           </Link>
           <div>
+            <span className="auth-eyebrow">Driver onboarding</span>
             <h1>Create Driver Account</h1>
             <p>Get approved to start accepting deliveries.</p>
           </div>
@@ -225,7 +227,7 @@ export default function DriverSignup() {
         <section className="auth-card signup-card">
           <form onSubmit={submit}>
             <div className="auth-section">
-              <SectionTitle tone="pink" label="Personal Information" />
+              <SectionTitle tone="pink" label="Personal Information" icon={User} />
               <div className="form-grid">
                 <Field label="Full Name" value={form.full_name} onChange={setField('full_name')} placeholder="John Doe" required />
                 <Field label="Phone Number" value={form.phone} onChange={setField('phone')} placeholder="+20 xxx xxx xxxx" required />
@@ -235,7 +237,7 @@ export default function DriverSignup() {
             </div>
 
             <div className="auth-section">
-              <SectionTitle tone="purple" label="Profile Photo" />
+              <SectionTitle tone="purple" label="Profile Photo" icon={Camera} />
               <div className="profile-photo-block">
                 <PhotoCapture
                   label="Profile Picture"
@@ -249,10 +251,10 @@ export default function DriverSignup() {
             </div>
 
             <div className="auth-section">
-              <SectionTitle tone="blue" label="National ID • بطاقة الهوية" />
+              <SectionTitle tone="blue" label="National ID Verification" icon={ShieldCheck} />
               <div className="id-photo-grid">
                 <PhotoCapture
-                  label="Front Side • الوجه الأمامي"
+                  label="Front Side"
                   sublabel="Photo of the front of your National ID"
                   icon={IdCard}
                   value={form.id_front_url}
@@ -261,7 +263,7 @@ export default function DriverSignup() {
                   required
                 />
                 <PhotoCapture
-                  label="Back Side • الظهر"
+                  label="Back Side"
                   sublabel="Photo of the back of your National ID"
                   icon={IdCard}
                   value={form.id_back_url}
@@ -273,7 +275,7 @@ export default function DriverSignup() {
             </div>
 
             <div className="auth-section">
-              <SectionTitle tone="purple" label="Security" />
+              <SectionTitle tone="purple" label="Security" icon={LockKeyhole} />
               <div className="form-grid">
                 <Field label="Password" type="password" value={form.password} onChange={setField('password')} placeholder="Min. 8 characters" required />
                 <Field label="Confirm Password" type="password" value={form.confirm} onChange={setField('confirm')} placeholder="Repeat password" required />
@@ -281,7 +283,7 @@ export default function DriverSignup() {
             </div>
 
             <div className="auth-section">
-              <SectionTitle tone="warning" label="Vehicle Details" />
+              <SectionTitle tone="warning" label="Vehicle Details" icon={Truck} />
               <div className="form-grid">
                 <label>
                   <span>Vehicle Type</span>
@@ -293,6 +295,11 @@ export default function DriverSignup() {
                   </select>
                 </label>
               </div>
+            </div>
+
+            <div className="signup-review-note">
+              <ClipboardCheck size={17} />
+              <span>Your account will stay pending until an admin verifies your uploaded ID.</span>
             </div>
 
             {error && (
@@ -319,9 +326,10 @@ export default function DriverSignup() {
 }
 
 /* ── helpers ── */
-function SectionTitle({ label, tone = 'pink' }) {
+function SectionTitle({ label, tone = 'pink', icon: Icon }) {
   return (
     <h3 className={`auth-section-title ${tone}`}>
+      {Icon && <Icon size={15} />}
       {label}
     </h3>
   );
