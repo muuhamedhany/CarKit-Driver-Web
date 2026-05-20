@@ -9,12 +9,12 @@ import { chromium } from 'playwright';
   page.on('requestfailed', request => console.log('REQUEST FAILED:', request.url(), request.failure().errorText));
 
   await page.goto('http://localhost:5174', { waitUntil: 'networkidle' });
+  console.log('FINAL URL:', page.url());
   
   const content = await page.content();
   console.log('HTML LENGTH:', content.length);
-  if (content.length < 1000) {
-      console.log('HTML CONTENT:', content);
-  }
+  const rootText = await page.locator('#root').innerText();
+  console.log('ROOT INNER TEXT:', rootText);
   
   await browser.close();
 })();

@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_ANON;
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
+const supabase = (SUPABASE_URL && SUPABASE_ANON) ? createClient(SUPABASE_URL, SUPABASE_ANON) : null;
 const BUCKET = 'driver-photos';
 
 function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '1/1', required }) {
@@ -23,6 +23,11 @@ function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '
     if (!file) return;
     setErr('');
     setUploading(true);
+    if (!supabase) {
+      setErr('Supabase is not configured (missing env variables).');
+      setUploading(false);
+      return;
+    }
     const ext = file.name.split('.').pop();
     const path = `signup/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
     const { error } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true });

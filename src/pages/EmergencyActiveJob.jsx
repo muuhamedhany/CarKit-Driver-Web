@@ -27,9 +27,9 @@ export default function EmergencyActiveJob() {
         axios.post(`${API_URL}/emergency/employees/location`, {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-        }, { headers }).catch(() => {});
+        }, { headers }).catch(() => { });
       },
-      () => {},
+      () => { },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 15000 }
     );
   };
@@ -102,6 +102,16 @@ export default function EmergencyActiveJob() {
 
       <div className="detail-grid">
         <article className="panel app-soft-card">
+          <MapTracker
+            lat={job.customer_lat || job.latitude}
+            lng={job.customer_lng || job.longitude}
+            label="Customer pin"
+            secondaryLat={job.employee_lat || job.tracking_lat}
+            secondaryLng={job.employee_lng || job.tracking_lng}
+          />
+        </article>
+
+        <article className="panel app-soft-card">
           <div className="panel-accent emergency" />
           <div className="panel-body padded-left">
             <h3 className="section-label blue">
@@ -138,16 +148,6 @@ export default function EmergencyActiveJob() {
               </button>
             </div>
           </div>
-        </article>
-
-        <article className="panel app-soft-card">
-          <MapTracker
-            lat={job.customer_lat || job.latitude}
-            lng={job.customer_lng || job.longitude}
-            label="Customer pin"
-            secondaryLat={job.employee_lat || job.tracking_lat}
-            secondaryLng={job.employee_lng || job.tracking_lng}
-          />
         </article>
       </div>
 
