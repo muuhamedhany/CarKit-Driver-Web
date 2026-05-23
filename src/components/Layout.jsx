@@ -17,40 +17,80 @@ const emergencyNav = [
 
 export default function Layout({ mode }) {
   const nav = mode === 'driver' ? driverNav : emergencyNav;
-  const accentColor  = mode === 'driver' ? 'var(--accent-pink)' : 'var(--accent-blue)';
+  const accentColor = mode === 'driver' ? 'var(--accent-pink)' : 'var(--accent-blue)';
+  const modeLabel   = mode === 'driver' ? 'Delivery Driver' : 'Emergency';
 
   return (
-    <div className="mobile-app-shell" style={{ '--mode-accent': accentColor }}>
-      <div className="mobile-app-frame">
-
-        <main className="mobile-app-content custom-scrollbar">
-          <div className="mobile-app-page">
-            <Outlet />
+    <>
+      {/* ── DESKTOP LAYOUT ── */}
+      <div className="desktop-layout" style={{ '--mode-accent': accentColor }}>
+        <aside className="desktop-sidebar">
+          {/* Brand */}
+          <div className="sidebar-brand">
+            <div className="sidebar-logo-mark">CK</div>
+            <div className="sidebar-brand-text">
+              <span className="sidebar-brand-name">CarKit</span>
+              <span className="sidebar-brand-sub">{modeLabel}</span>
+            </div>
           </div>
-        </main>
 
-        <nav className="mobile-tabbar">
-          {nav.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) => `mobile-tab${isActive ? ' is-active' : ''}`}
-              >
-                {({ isActive }) => (
-                  <>
-                    <div className="mobile-tab-icon">
-                      <Icon size={18} />
-                    </div>
-                    <span>{item.label}</span>
-                  </>
-                )}
-              </NavLink>
-            );
-          })}
-        </nav>
+          {/* Nav */}
+          <nav className="sidebar-nav">
+            {nav.map((item) => {
+              const Icon = item.icon;
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) => `sidebar-link${isActive ? ' is-active' : ''}`}
+                >
+                  <div className="sidebar-link-icon">
+                    <Icon size={18} />
+                  </div>
+                  <span>{item.label}</span>
+                </NavLink>
+              );
+            })}
+          </nav>
+        </aside>
+
+        <main className="desktop-main custom-scrollbar">
+          <Outlet />
+        </main>
       </div>
-    </div>
+
+      {/* ── MOBILE LAYOUT ── */}
+      <div className="mobile-app-shell" style={{ '--mode-accent': accentColor }}>
+        <div className="mobile-app-frame">
+          <main className="mobile-app-content custom-scrollbar">
+            <div className="mobile-app-page">
+              <Outlet />
+            </div>
+          </main>
+
+          <nav className="mobile-tabbar">
+            {nav.map((item) => {
+              const Icon = item.icon;
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) => `mobile-tab${isActive ? ' is-active' : ''}`}
+                >
+                  {() => (
+                    <>
+                      <div className="mobile-tab-icon">
+                        <Icon size={18} />
+                      </div>
+                      <span>{item.label}</span>
+                    </>
+                  )}
+                </NavLink>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+    </>
   );
 }

@@ -12,6 +12,7 @@ import EmergencyDashboard from './pages/EmergencyDashboard';
 import EmergencyActiveJob from './pages/EmergencyActiveJob';
 import EmergencyHistory from './pages/EmergencyHistory';
 import EmergencyProfile from './pages/EmergencyProfile';
+import ThemeToggle from './components/ThemeToggle';
 
 function IndexRedirect() {
   const { role, isAuthenticated } = useAuth();
@@ -22,6 +23,9 @@ function IndexRedirect() {
 export default function App() {
   return (
     <AuthProvider>
+      <div className="theme-fab">
+        <ThemeToggle compact />
+      </div>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<DriverSignup />} />

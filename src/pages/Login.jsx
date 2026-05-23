@@ -36,8 +36,8 @@ export default function Login() {
   const modeAccent = gateway === 'driver' ? 'var(--accent-pink)' : 'var(--accent-blue)';
 
   return (
-    <div className="auth-page" style={{ '--mode-accent': modeAccent }}>
-      <div className="auth-shell animate-fade-in">
+    <div className="auth-page animate-fade-in" style={{ '--mode-accent': modeAccent }}>
+      <div className="auth-container">
         <header className="auth-brand">
           <div className="auth-brand-row">
             <div className="auth-logo-mark">CK</div>
