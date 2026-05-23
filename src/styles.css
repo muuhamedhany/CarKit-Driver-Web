@@ -106,7 +106,7 @@
   --accent-purple-light: #7C3CC7;
   --accent-soft: #F7E8F3;
   --accent-border: #E9B9DC;
-  
+
   --info-soft: #DBEAFE;
   --success-soft: #DFF7EC;
   --warning-soft: #FEF3C7;
@@ -1910,34 +1910,90 @@ details summary::-webkit-details-marker {
 
 .mobile-tabbar {
   padding: 8px;
-  border-radius: 24px;
-  border-color: var(--card-border);
-  background: rgba(13, 13, 15, 0.96);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.38);
+  border-radius: 26px;
+  border-color: rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035)),
+    rgba(8, 8, 13, 0.9);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.54),
+    0 0 34px color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 12%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  overflow: hidden;
+}
+
+.mobile-tabbar::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent, color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 22%, transparent), transparent);
+  opacity: 0.42;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 52%);
 }
 
 .mobile-tab {
+  position: relative;
   flex: 1;
   min-width: 0;
-  min-height: 58px;
-  border-radius: 20px;
+  min-height: 62px;
+  border-radius: 17px;
+  padding: 7px 4px 9px;
   color: var(--text-secondary);
   font-size: 9.5px;
   font-weight: 700;
-  transition: transform 160ms ease-out, background-color 160ms ease-out, color 160ms ease-out;
+  isolation: isolate;
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    color 220ms ease,
+    background-color 220ms ease,
+    padding 220ms ease;
+}
+
+.mobile-tab::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transform: scale(0.88);
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 38%, transparent), transparent 62%),
+    color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 26%, transparent);
+  box-shadow:
+    0 12px 26px color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 16%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  transition:
+    opacity 220ms ease,
+    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .mobile-tab:hover,
 .mobile-tab:focus-visible {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   outline: none;
 }
 
 .mobile-tab-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 12px;
   flex-shrink: 0;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition:
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    color 220ms ease;
 }
 
 .mobile-tab span {
@@ -1945,18 +2001,47 @@ details summary::-webkit-details-marker {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.1;
+  transform: translateY(0);
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease,
+    color 220ms ease;
 }
 
 .mobile-tab.is-active {
-  color: var(--mode-accent, var(--accent-pink));
-  background: color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 12%, transparent);
-  padding-left: 12px;
-  padding-right: 12px
+  color: #fff;
+  background: transparent;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.mobile-tab.is-active::before {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .mobile-tab.is-active .mobile-tab-icon {
+  color: #fff;
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--mode-accent, var(--accent-pink)), var(--accent-purple));
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 10px 24px color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 28%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.mobile-tab.is-active span {
+  color: #fff;
+  transform: translateY(0);
+}
+
+.mobile-tab:not(.is-active):hover .mobile-tab-icon,
+.mobile-tab:not(.is-active):focus-visible .mobile-tab-icon {
   color: var(--mode-accent, var(--accent-pink));
-  background: color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 14%, transparent);
+  background: color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 10%, transparent);
+  border-color: color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 20%, transparent);
+  transform: translateY(-1px);
 }
 
 .auth-container {
@@ -3251,224 +3336,288 @@ textarea:focus {
   }
 }
 
-/* ─── Light Mode Contrast Hardening ─────────────────── */
-[data-theme='light'] {
-  --text-secondary: #334155;
-  --text-muted: #475569;
-  --accent-warning: #b45309;
-  --accent-error: #b91c1c;
+/* Auth refinements */
+.auth-page {
+  overflow-y: auto;
 }
 
-[data-theme='light'] .muted,
-[data-theme='light'] .compact-meta,
-[data-theme='light'] .app-page-kicker,
-[data-theme='light'] .profile-main p,
-[data-theme='light'] .profile-meta-card span,
-[data-theme='light'] .order-meta,
-[data-theme='light'] .meta-line {
-  color: var(--text-secondary);
-}
-
-[data-theme='light'] .mobile-tab {
-  color: #334155;
-}
-
-[data-theme='light'] .mobile-tab-icon {
-  color: #475569;
-}
-
-[data-theme='light'] .mobile-tab.is-active {
-  color: #1d4ed8;
-  background: rgba(59, 130, 246, 0.14);
-}
-
-[data-theme='light'] .mobile-tab.is-active .mobile-tab-icon {
-  color: #1d4ed8;
-  background: rgba(59, 130, 246, 0.2);
-}
-
-[data-theme='light'] .status-pill {
-  color: #334155;
-  border-color: rgba(15, 23, 42, 0.18);
-}
-
-[data-theme='light'] .status-pill.online {
-  color: #166534;
-  background: rgba(22, 163, 74, 0.14);
-  border-color: rgba(22, 163, 74, 0.34);
-}
-
-[data-theme='light'] .status-pill.pending {
-  color: #92400e;
-  background: rgba(245, 158, 11, 0.2);
-  border-color: rgba(180, 83, 9, 0.38);
-}
-
-[data-theme='light'] .status-pill.offline {
-  color: #991b1b;
-  background: rgba(239, 68, 68, 0.16);
-  border-color: rgba(185, 28, 28, 0.34);
-}
-
-[data-theme='light'] .button.danger {
-  color: #991b1b;
-  background: rgba(239, 68, 68, 0.14);
-  border-color: rgba(185, 28, 28, 0.34);
-}
-
-[data-theme='light'] .button.danger:hover {
-  color: #7f1d1d;
-  background: rgba(239, 68, 68, 0.22);
-  border-color: rgba(153, 27, 27, 0.42);
-}
-
-[data-theme='light'] .button.green {
-  color: #166534;
-  background: rgba(34, 197, 94, 0.14);
-  border-color: rgba(22, 163, 74, 0.36);
-}
-
-[data-theme='light'] .button.green:hover {
-  color: #14532d;
-  background: rgba(34, 197, 94, 0.22);
-  border-color: rgba(22, 163, 74, 0.46);
-}
-
-[data-theme='light'] .profile-meta-card strong {
-  color: #0f172a;
-}
-
-[data-theme='light'] .profile-meta-card {
-  border-color: rgba(15, 23, 42, 0.16);
-  background: rgba(248, 250, 252, 0.9);
-}
-
-[data-theme='light'] .empty-state {
-  background: #f8fafc;
-  border: 1px dashed rgba(15, 23, 42, 0.18);
-  color: #334155;
-}
-
-[data-theme='light'] .empty-state-icon {
-  background: rgba(15, 23, 42, 0.06);
-  color: #334155;
-}
-
-[data-theme='light'] .banner.warning {
-  color: #92400e;
-  background: rgba(245, 158, 11, 0.16);
-  border-color: rgba(180, 83, 9, 0.34);
-}
-
-[data-theme='light'] .status-dot.pending {
-  background: #b45309;
-}
-
-[data-theme='light'] .status-banner {
-  color: #1f2937;
-}
-
-[data-theme='light'] .empty-state p {
-  color: #334155;
-}
-
-/* ─── Signup Step Wizard Progress Indicator ────────── */
-.signup-steps-progress {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 32px;
-  padding: 12px 24px;
-  border-radius: 16px;
-  background: var(--surface-muted);
-  border: 1px solid var(--border-subtle);
-}
-
-.step-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  opacity: 0.5;
-  transition: all 0.3s ease;
-}
-
-.step-item.active {
-  opacity: 1;
-}
-
-.step-item.completed {
+.auth-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 24%),
+    radial-gradient(circle at 50% 18%, rgba(41, 121, 255, 0.12), transparent 32%);
   opacity: 0.8;
 }
 
-.step-number {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--surface-pressed);
-  border: 1.5px solid var(--text-muted);
+.auth-grid-overlay {
+  opacity: 0.38;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
+}
+
+.auth-shell {
+  gap: 16px;
+}
+
+.auth-brand {
+  padding: 0 2px 24px;
+}
+
+.auth-brand-row {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.auth-login-card,
+.signup-card,
+.success-state {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
+    rgba(12, 12, 18, 0.82);
+  border-radius: 22px;
+}
+
+.auth-login-card {
+  padding: 22px;
+}
+
+.auth-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.auth-card-heading .auth-card-copy {
+  margin-bottom: 0;
+}
+
+.auth-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  color: var(--mode-accent, var(--accent-pink));
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.auth-heading-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: #fff;
+  background: color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mode-accent, var(--accent-pink)) 32%, transparent);
+}
+
+.auth-card-title {
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+.gateway-tabs {
+  margin-bottom: 22px;
+  border-radius: 16px;
+}
+
+.gateway-tabs button {
+  border-radius: 12px;
+  min-height: 50px;
+}
+
+.auth-input-wrap input,
+.signup-card input,
+.signup-card select {
+  background: rgba(2, 2, 5, 0.34);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.auth-input-wrap:focus-within svg {
+  color: var(--mode-accent, var(--accent-pink));
+}
+
+.auth-submit {
+  margin-top: 2px;
+  letter-spacing: 0;
+}
+
+.auth-assurance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.auth-assurance-grid div,
+.signup-review-note,
+.signup-progress div {
   display: flex;
   align-items: center;
+  gap: 8px;
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.auth-assurance-grid div {
+  min-height: 42px;
+  padding: 9px 10px;
+  border-radius: 13px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.auth-assurance-grid svg {
+  color: var(--mode-accent, var(--accent-pink));
+  flex-shrink: 0;
+}
+
+.auth-link-row {
+  margin-top: 18px;
+}
+
+.auth-topbar {
+  padding-bottom: 0;
+}
+
+.auth-topbar h1 {
+  font-size: 27px;
+}
+
+.signup-progress {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 4px;
+}
+
+.signup-progress div {
+  min-height: 40px;
   justify-content: center;
-  font-size: 12px;
+  border-radius: 13px;
+  color: var(--text-secondary);
+  font-size: 11px;
   font-weight: 800;
-  color: var(--text-muted);
-  transition: all 0.3s ease;
 }
 
-.step-item.active .step-number {
-  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-  border-color: transparent;
+.signup-progress .is-active {
   color: #fff;
-  box-shadow: var(--glow-pink);
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
 }
 
-.step-item.completed .step-number {
-  background: var(--accent-green);
-  border-color: transparent;
-  color: #fff;
-  box-shadow: var(--glow-green);
+.signup-card {
+  padding: 20px 18px 14px;
 }
 
-.step-label {
+.signup-card .form-grid {
+  gap: 12px;
+}
+
+.auth-section {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--divider-line);
+}
+
+.auth-section:last-of-type {
+  margin-bottom: 14px;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.auth-section-title {
+  gap: 9px;
+  margin: 0 0 14px;
+}
+
+.auth-section-title svg {
+  flex-shrink: 0;
+}
+
+.profile-photo-block {
+  max-width: 210px;
+}
+
+.photo-capture-zone {
+  min-height: 132px;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.018)),
+    rgba(255, 255, 255, 0.035);
+}
+
+.photo-capture-zone:hover {
+  border-color: color-mix(in srgb, var(--accent-pink) 42%, transparent);
+}
+
+.photo-capture-icon {
+  border-radius: 16px;
+}
+
+.photo-action,
+.photo-capture-change {
+  border-radius: 14px;
+}
+
+.signup-review-note {
+  padding: 12px 14px;
+  border-radius: 16px;
+  color: #FFD27A;
+  background: var(--warning-soft);
+  border-color: rgba(255, 171, 0, 0.24);
   font-size: 12px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
+  margin-bottom: 14px;
 }
 
-.step-item.active .step-label {
-  color: var(--text-primary);
+.signup-review-note svg {
+  flex-shrink: 0;
 }
 
-.step-divider {
-  flex: 1;
-  max-width: 60px;
-  height: 2px;
-  background: var(--divider-line);
-  border-radius: 2px;
-  transition: all 0.3s ease;
+@media (min-width: 860px) {
+  .auth-shell {
+    max-width: 440px;
+    min-height: calc(100dvh - 64px);
+    padding: 32px 22px 24px;
+  }
+
+  .auth-shell.signup {
+    max-width: 530px;
+  }
 }
 
-.step-item.completed + .step-divider {
-  background: var(--accent-green);
-}
+@media (max-width: 430px) {
 
-/* ─── Submit Dock Multi-Button Layout ──────────────── */
-.auth-submit-dock {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
+  .auth-login-card,
+  .signup-card {
+    padding: 18px;
+  }
 
-.auth-back-btn {
-  flex: 0 0 120px;
-  width: 120px;
-}
+  .auth-card-title {
+    font-size: 26px;
+  }
 
-.auth-submit-dock .auth-submit {
-  flex: 1 1 auto;
-  margin: 0;
+  .auth-assurance-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .signup-progress {
+    gap: 6px;
+  }
+
+  .signup-progress div {
+    min-height: 38px;
+    gap: 5px;
+    font-size: 10px;
+    padding-inline: 6px;
+  }
 }
