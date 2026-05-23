@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -21,11 +21,16 @@ function IndexRedirect() {
 }
 
 export default function App() {
+  const location = useLocation();
+  const isAuthPage = ['/login', '/signup'].includes(location.pathname);
+
   return (
     <AuthProvider>
-      <div className="theme-fab">
-        <ThemeToggle compact />
-      </div>
+      {!isAuthPage && (
+        <div className="theme-fab">
+          <ThemeToggle compact />
+        </div>
+      )}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<DriverSignup />} />

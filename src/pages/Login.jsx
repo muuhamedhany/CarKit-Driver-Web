@@ -38,26 +38,17 @@ export default function Login() {
   return (
     <div className="auth-page" style={{ '--mode-accent': modeAccent }}>
       <div className="auth-grid-overlay" />
-      <div className="auth-shell animate-fade-in">
-        <header className="auth-brand">
-          <div className="auth-brand-row">
-            <div className="auth-logo-mark">CK</div>
-            <div>
-              <h1>CarKit</h1>
-              <p>Field Operations</p>
-            </div>
-          </div>
-        </header>
-
+      <div className="auth-container animate-fade-in">
         <section className={`auth-card auth-card-${gateway === 'driver' ? 'driver' : 'emergency'} auth-login-card`}>
           <div className="auth-card-heading">
             <div>
-              <span className="auth-eyebrow">Secure access</span>
+
               <h2 className="auth-card-title">Sign In</h2>
-              <p className="auth-card-copy">Choose your workspace and continue.</p>
+
             </div>
-            <div className="auth-heading-icon" aria-hidden="true">
-              {gateway === 'driver' ? <Truck size={22} /> : <Wrench size={22} />}
+            <div className="auth-card-brand-badge">
+              <div className="auth-logo-mark-mini">CK</div>
+              <span>CarKit Field Ops</span>
             </div>
           </div>
 

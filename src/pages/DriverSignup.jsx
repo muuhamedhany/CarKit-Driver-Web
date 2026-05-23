@@ -212,111 +212,167 @@ export default function DriverSignup() {
   return (
     <div className="auth-page">
       <div className="auth-grid-overlay" />
-      <div className="auth-shell signup animate-fade-in">
-        <header className="auth-topbar">
-          <Link to="/login" onClick={handleBackHeader} className="auth-back" aria-label="Back">
-            <ArrowLeft size={18} />
-          </Link>
-          <div>
-            <span className="auth-eyebrow">Driver onboarding</span>
-            <h1>Create Driver Account</h1>
-            <p>Get approved to start accepting deliveries.</p>
-          </div>
-        </header>
-
+      <div className="auth-container signup-container animate-fade-in">
         <section className="auth-card signup-card">
-          <form onSubmit={submit}>
-            <div className="auth-section">
-              <SectionTitle tone="pink" label="Personal Information" icon={User} />
-              <div className="form-grid">
-                <Field label="Full Name" value={form.full_name} onChange={setField('full_name')} placeholder="John Doe" required />
-                <Field label="Phone Number" value={form.phone} onChange={setField('phone')} placeholder="+20 xxx xxx xxxx" required />
-                <Field label="Email Address" type="email" value={form.email} onChange={setField('email')} placeholder="driver@carkit.io" required />
-                <Field label="Vehicle Plate" value={form.vehicle_plate} onChange={setField('vehicle_plate')} placeholder="ABC-1234" required />
+          <div className="auth-card-heading">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <Link to="/login" onClick={handleBackHeader} className="auth-back-mini" aria-label="Back">
+                <ArrowLeft size={16} />
+              </Link>
+              <div>
+
+                <h2 className="auth-card-title">Create Account</h2>
+                <p className="auth-card-copy">Get approved to start accepting deliveries.</p>
               </div>
             </div>
-
-            <div className="auth-section">
-              <SectionTitle tone="purple" label="Profile Photo" icon={Camera} />
-              <div className="profile-photo-block">
-                <PhotoCapture
-                  label="Profile Picture"
-                  sublabel="Clear face photo - optional but recommended"
-                  icon={User}
-                  value={form.profile_photo_url}
-                  onChange={set('profile_photo_url')}
-                  aspect="1/1"
-                />
-              </div>
+            <div className="auth-card-brand-badge">
+              <div className="auth-logo-mark-mini">CK</div>
+              <span>Driver Onboarding</span>
             </div>
+          </div>
 
-            <div className="auth-section">
-              <SectionTitle tone="blue" label="National ID Verification" icon={ShieldCheck} />
-              <div className="id-photo-grid">
-                <PhotoCapture
-                  label="Front Side"
-                  sublabel="Photo of the front of your National ID"
-                  icon={IdCard}
-                  value={form.id_front_url}
-                  onChange={set('id_front_url')}
-                  aspect="16/10"
-                  required
-                />
-                <PhotoCapture
-                  label="Back Side"
-                  sublabel="Photo of the back of your National ID"
-                  icon={IdCard}
-                  value={form.id_back_url}
-                  onChange={set('id_back_url')}
-                  aspect="16/10"
-                  required
-                />
-              </div>
+          <div className="signup-progress" style={{ gridTemplateColumns: 'repeat(2, 1fr)', marginBottom: 20 }}>
+            <div
+              className={step === 1 ? 'is-active' : ''}
+              onClick={() => setStep(1)}
+              style={{ cursor: 'pointer' }}
+            >
+              1. Info & Vehicle
             </div>
-
-            <div className="auth-section">
-              <SectionTitle tone="purple" label="Security" icon={LockKeyhole} />
-              <div className="form-grid">
-                <Field label="Password" type="password" value={form.password} onChange={setField('password')} placeholder="Min. 8 characters" required />
-                <Field label="Confirm Password" type="password" value={form.confirm} onChange={setField('confirm')} placeholder="Repeat password" required />
-              </div>
+            <div
+              className={step === 2 ? 'is-active' : ''}
+              onClick={() => {
+                if (form.full_name.trim() && form.phone.trim() && form.email.trim() && form.vehicle_plate.trim() && form.password && form.password.length >= 8 && form.password === form.confirm) {
+                  setStep(2);
+                }
+              }}
+              style={{
+                cursor: (form.full_name.trim() && form.phone.trim() && form.email.trim() && form.vehicle_plate.trim() && form.password && form.password.length >= 8 && form.password === form.confirm) ? 'pointer' : 'not-allowed'
+              }}
+            >
+              2. Photo Uploads
             </div>
+          </div>
 
-            <div className="auth-section">
-              <SectionTitle tone="warning" label="Vehicle Details" icon={Truck} />
-              <div className="form-grid">
-                <label>
-                  <span>Vehicle Type</span>
-                  <select value={form.vehicle_type} onChange={setField('vehicle_type')}>
-                    <option value="motorcycle">Motorcycle</option>
-                    <option value="car">Car</option>
-                    <option value="van">Van</option>
-                    <option value="truck">Truck</option>
-                  </select>
-                </label>
-              </div>
-            </div>
+          <form onSubmit={submit} className="signup-form-grid">
+            {step === 1 && (
+              <>
+                <div className="signup-col">
+                  <div className="auth-section">
+                    <SectionTitle tone="pink" label="Personal Information" icon={User} />
+                    <div className="form-grid">
+                      <Field label="Full Name" value={form.full_name} onChange={setField('full_name')} placeholder="John Doe" required />
+                      <Field label="Phone Number" value={form.phone} onChange={setField('phone')} placeholder="+20 xxx xxx xxxx" required />
+                      <Field label="Email Address" type="email" value={form.email} onChange={setField('email')} placeholder="driver@carkit.io" required />
+                    </div>
+                  </div>
+                </div>
 
-            <div className="signup-review-note">
-              <ClipboardCheck size={17} />
-              <span>Your account will stay pending until an admin verifies your uploaded ID.</span>
-            </div>
+                <div className="signup-col">
+                  <div className="auth-section">
+                    <SectionTitle tone="warning" label="Vehicle Details" icon={Truck} />
+                    <div className="form-grid">
+                      <label>
+                        <span>Vehicle Type</span>
+                        <select value={form.vehicle_type} onChange={setField('vehicle_type')}>
+                          <option value="motorcycle">Motorcycle</option>
+                          <option value="car">Car</option>
+                          <option value="van">Van</option>
+                          <option value="truck">Truck</option>
+                        </select>
+                      </label>
+                      <Field label="Vehicle Plate" value={form.vehicle_plate} onChange={setField('vehicle_plate')} placeholder="ABC-1234" required />
+                    </div>
+                  </div>
 
-            {error && (
-              <div className="alert" style={{ marginBottom: 12 }}>
-                <AlertCircle size={15} style={{ flexShrink: 0 }} /> {error}
-              </div>
+                  <div className="auth-section">
+                    <SectionTitle tone="purple" label="Security" icon={LockKeyhole} />
+                    <div className="form-grid">
+                      <Field label="Password" type="password" value={form.password} onChange={setField('password')} placeholder="Min. 8 characters" required />
+                      <Field label="Confirm Password" type="password" value={form.confirm} onChange={setField('confirm')} placeholder="Repeat password" required />
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
 
-            <div className="auth-submit-dock">
-              <button
-                type="submit"
-                disabled={loading}
-                className="auth-submit"
-              >
-                {loading && <Loader2 size={16} className="animate-spin" />}
-                {loading ? 'Submitting...' : 'Submit for Approval'}
-              </button>
+            {step === 2 && (
+              <>
+                <div className="signup-col">
+                  <div className="auth-section">
+                    <SectionTitle tone="purple" label="Profile Photo" icon={Camera} />
+                    <div className="profile-photo-block">
+                      <PhotoCapture
+                        label="Profile Picture"
+                        sublabel="Clear face photo - optional but recommended"
+                        icon={User}
+                        value={form.profile_photo_url}
+                        onChange={set('profile_photo_url')}
+                        aspect="1/1"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="signup-col">
+                  <div className="auth-section">
+                    <SectionTitle tone="blue" label="National ID Verification" icon={ShieldCheck} />
+                    <div className="id-photo-grid">
+                      <PhotoCapture
+                        label="Front Side"
+                        sublabel="Photo of the front of your National ID"
+                        icon={IdCard}
+                        value={form.id_front_url}
+                        onChange={set('id_front_url')}
+                        aspect="16/10"
+                        required
+                      />
+                      <PhotoCapture
+                        label="Back Side"
+                        sublabel="Photo of the back of your National ID"
+                        icon={IdCard}
+                        value={form.id_back_url}
+                        onChange={set('id_back_url')}
+                        aspect="16/10"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="signup-review-note">
+                    <ClipboardCheck size={17} />
+                    <span>Your account will stay pending until an admin verifies your uploaded ID.</span>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="signup-submit-row">
+              {error && (
+                <div className="alert" style={{ marginBottom: 12 }}>
+                  <AlertCircle size={15} style={{ flexShrink: 0 }} /> {error}
+                </div>
+              )}
+
+              <div className="auth-submit-dock">
+                {step === 2 && (
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="button ghost auth-back-btn"
+                  >
+                    Back
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="auth-submit"
+                >
+                  {loading && <Loader2 size={16} className="animate-spin" />}
+                  {loading ? 'Submitting...' : step === 1 ? 'Next Step' : 'Submit for Approval'}
+                </button>
+              </div>
             </div>
           </form>
         </section>
