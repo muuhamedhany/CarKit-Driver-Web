@@ -101,21 +101,23 @@ export default function DriverDashboard() {
           >
             <div className="card-header-row">
               <div className="order-summary">
-                <div className="order-id-badge">
+                <div className="order-id-badge" style={order.is_return ? { backgroundColor: 'var(--accent-purple-soft)', color: 'var(--accent-purple)' } : {}}>
                   #{order.order_id}
                 </div>
                 <div className="order-copy">
-                  <strong>Order #{order.order_id}</strong>
-                  <p>{order.item_count} items ready</p>
+                  <strong>{order.is_return ? `Return #${order.order_id}` : `Order #${order.order_id}`}</strong>
+                  <p>{order.is_return ? `${order.item_count} items to return` : `${order.item_count} items ready`}</p>
                 </div>
               </div>
-              <span className="status-pill">{order.item_count} items</span>
+              <span className={`status-pill ${order.is_return ? 'purple' : ''}`}>{order.item_count} items</span>
             </div>
 
             <p className="meta-line">
-              <MapPin size={13} style={{ color: 'var(--accent-pink)', flexShrink: 0 }} />
+              <MapPin size={13} style={{ color: order.is_return ? 'var(--accent-purple)' : 'var(--accent-pink)', flexShrink: 0 }} />
               <span>
-                {order.shipping_city || order.shipping_title || 'Area unavailable'}
+                {order.is_return
+                  ? `From: ${order.shipping_city || order.shipping_title || 'Customer'} to ${order.vendor_name || 'Vendor'}`
+                  : `To: ${order.shipping_city || order.shipping_title || 'Area unavailable'}`}
               </span>
             </p>
             <p className="meta-line">
@@ -124,12 +126,12 @@ export default function DriverDashboard() {
             </p>
 
             <button
-              className="button primary"
+              className={`button ${order.is_return ? 'purple' : 'primary'}`}
               disabled={Boolean(active)}
               onClick={() => accept(order.order_id)}
               style={{ width: '100%', justifyContent: 'center' }}
             >
-              <PackageCheck size={15} /> Accept Order
+              <PackageCheck size={15} /> {order.is_return ? 'Accept Return' : 'Accept Order'}
             </button>
           </article>
         ))}

@@ -67,8 +67,8 @@ export default function DriverActiveOrder() {
             <Package size={20} />
           </div>
           <div className="screen-title-copy">
-            <p className="app-page-kicker">Active Delivery</p>
-            <h2>Order #{order.order_id}</h2>
+            <p className="app-page-kicker">{order.is_return ? 'Active Return Delivery' : 'Active Delivery'}</p>
+            <h2>{order.is_return ? `Return Order #${order.order_id}` : `Order #${order.order_id}`}</h2>
           </div>
         </div>
         <div className="progress">
@@ -80,7 +80,11 @@ export default function DriverActiveOrder() {
       <div className="detail-grid">
 
         <article className="panel app-soft-card">
-          <MapTracker lat={order.shipping_latitude} lng={order.shipping_longitude} label="Customer location" />
+          <MapTracker 
+            lat={order.is_return ? Number(order.workshop_latitude) : Number(order.shipping_latitude)} 
+            lng={order.is_return ? Number(order.workshop_longitude) : Number(order.shipping_longitude)} 
+            label={order.is_return ? 'Vendor branch location' : 'Customer location'} 
+          />
 
           <div style={{ marginTop: 16 }}>
             {!preview ? (
@@ -118,33 +122,62 @@ export default function DriverActiveOrder() {
 
             <div className="app-sticky-action">
               <button
-                className="button primary"
+                className={`button ${order.is_return ? 'purple' : 'primary'}`}
                 disabled={!proof || completing}
                 onClick={complete}
                 style={{ width: '100%', justifyContent: 'center' }}
               >
                 <CheckCircle2 size={16} />
-                {completing ? 'Completing...' : 'Mark as Delivered'}
+                {completing ? 'Completing...' : order.is_return ? 'Mark Return Delivered' : 'Mark as Delivered'}
               </button>
             </div>
           </div>
         </article>
 
         <article className="panel app-soft-card">
-          <div className="panel-accent" />
+          <div className="panel-accent" style={order.is_return ? { backgroundColor: 'var(--accent-purple)' } : {}} />
           <div className="panel-body padded-left">
 
-            <h3 className="section-label purple">
-              <User size={12} /> Customer Details
-            </h3>
-            <p className="item-title">{order.customer_name}</p>
-            <p className="meta-line">
-              <Phone size={13} style={{ flexShrink: 0 }} /> {order.customer_phone}
-            </p>
-            <p className="meta-line">
-              <MapPin size={13} style={{ flexShrink: 0, marginTop: 2 }} />
-              {[order.shipping_street, order.shipping_city].filter(Boolean).join(', ')}
-            </p>
+            {order.is_return ? (
+              <>
+                <h3 className="section-label purple">
+                  <User size={12} /> Pickup From (Customer)
+                </h3>
+                <p className="item-title">{order.customer_name}</p>
+                <p className="meta-line">
+                  <Phone size={13} style={{ flexShrink: 0 }} /> {order.customer_phone}
+                </p>
+                <p className="meta-line">
+                  <MapPin size={13} style={{ flexShrink: 0, marginTop: 2 }} />
+                  {[order.shipping_street, order.shipping_city].filter(Boolean).join(', ')}
+                </p>
+
+                <div className="divider-soft" style={{ marginTop: 16, paddingTop: 16 }}>
+                  <h3 className="section-label pink">
+                    <MapPin size={12} /> Return To (Vendor Branch)
+                  </h3>
+                  <p className="item-title">{order.vendor_name || 'Vendor Branch'}</p>
+                  <p className="meta-line" style={{ color: 'var(--text-secondary)' }}>
+                    <MapPin size={13} style={{ flexShrink: 0, marginTop: 2 }} />
+                    {order.workshop_address || 'Vendor Branch Address'}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className="section-label purple">
+                  <User size={12} /> Customer Details
+                </h3>
+                <p className="item-title">{order.customer_name}</p>
+                <p className="meta-line">
+                  <Phone size={13} style={{ flexShrink: 0 }} /> {order.customer_phone}
+                </p>
+                <p className="meta-line">
+                  <MapPin size={13} style={{ flexShrink: 0, marginTop: 2 }} />
+                  {[order.shipping_street, order.shipping_city].filter(Boolean).join(', ')}
+                </p>
+              </>
+            )}
 
             <div className="divider-soft">
               <h3 className="section-label blue">
