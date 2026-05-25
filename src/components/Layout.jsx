@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { Activity, BriefcaseBusiness, Clock, History, Home, UserRound, Zap } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const driverNav = [
   { to: '/driver/dashboard', label: 'Dashboard',    icon: Home },
@@ -16,6 +17,7 @@ const emergencyNav = [
 ];
 
 export default function Layout({ mode }) {
+  const { t } = useLanguage();
   const nav = mode === 'driver' ? driverNav : emergencyNav;
   const accentColor = mode === 'driver' ? 'var(--accent-pink)' : 'var(--accent-blue)';
   const modeLabel   = mode === 'driver' ? 'Delivery Driver' : 'Emergency';
@@ -29,8 +31,8 @@ export default function Layout({ mode }) {
           <div className="sidebar-brand">
             <div className="sidebar-logo-mark">CK</div>
             <div className="sidebar-brand-text">
-              <span className="sidebar-brand-name">CarKit</span>
-              <span className="sidebar-brand-sub">{modeLabel}</span>
+              <span className="sidebar-brand-name">{t('CarKit')}</span>
+              <span className="sidebar-brand-sub">{t(modeLabel)}</span>
             </div>
           </div>
 
@@ -47,7 +49,7 @@ export default function Layout({ mode }) {
                   <div className="sidebar-link-icon">
                     <Icon size={18} />
                   </div>
-                  <span>{item.label}</span>
+                  <span>{t(item.label)}</span>
                 </NavLink>
               );
             })}
@@ -82,7 +84,7 @@ export default function Layout({ mode }) {
                       <div className="mobile-tab-icon">
                         <Icon size={18} />
                       </div>
-                      <span>{item.label}</span>
+                      <span>{t(item.label)}</span>
                     </>
                   )}
                 </NavLink>

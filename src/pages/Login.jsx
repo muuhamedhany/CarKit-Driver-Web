@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AlertCircle, BadgeCheck, Eye, EyeOff, KeyRound, Loader2, Mail, ShieldCheck, Truck, Wrench, Zap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Login() {
   const [gateway, setGateway] = useState('driver');
@@ -10,6 +11,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const submit = async (event) => {
@@ -22,12 +24,12 @@ export default function Login() {
         : { phone: form.email, email: form.email, password: form.password };
       const result = await login(gateway, payload);
       if (!result.success) {
-        setError(result.message || 'Login failed.');
+        setError(result.message || t('Login failed.'));
         return;
       }
       navigate(gateway === 'driver' ? '/driver/dashboard' : '/emergency/dashboard', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed.');
+      setError(err.response?.data?.message || t('Login failed.'));
     } finally {
       setLoading(false);
     }
@@ -42,13 +44,11 @@ export default function Login() {
         <section className={`auth-card auth-card-${gateway === 'driver' ? 'driver' : 'emergency'} auth-login-card`}>
           <div className="auth-card-heading">
             <div>
-
-              <h2 className="auth-card-title">Sign In</h2>
-
+              <h2 className="auth-card-title">{t('Sign In')}</h2>
             </div>
             <div className="auth-card-brand-badge">
               <div className="auth-logo-mark-mini">CK</div>
-              <span>CarKit Field Ops</span>
+              <span>{t('CarKit Field Ops')}</span>
             </div>
           </div>
 
@@ -58,21 +58,21 @@ export default function Login() {
               className={gateway === 'driver' ? 'active' : ''}
               onClick={() => setGateway('driver')}
             >
-              <Truck size={16} /> Delivery Driver
+              <Truck size={16} /> {t('Delivery Driver')}
             </button>
             <button
               type="button"
               className={gateway === 'emergency_employee' ? 'active' : ''}
               onClick={() => setGateway('emergency_employee')}
             >
-              <Wrench size={16} /> Emergency
+              <Wrench size={16} /> {t('Emergency')}
             </button>
           </div>
 
           <form onSubmit={submit} className="auth-form">
             <div>
               <label className="auth-field-label">
-                <span>{gateway === 'driver' ? 'Email Address' : 'Phone or Email'}</span>
+                <span>{gateway === 'driver' ? t('Email Address') : t('Phone or Email')}</span>
               </label>
               <div className="auth-input-wrap">
                 <Mail size={16} />
@@ -88,7 +88,7 @@ export default function Login() {
 
             <div>
               <label className="auth-field-label">
-                <span>Password</span>
+                <span>{t('Password')}</span>
               </label>
               <div className="auth-input-wrap">
                 <KeyRound size={16} />
@@ -96,7 +96,7 @@ export default function Login() {
                   type={showPassword ? 'text' : 'password'}
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  placeholder="Enter your password"
+                  placeholder={t('Enter your password')}
                   className="has-action"
                   required
                 />
@@ -104,7 +104,7 @@ export default function Login() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="auth-visibility-button"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? t('Hide password') : t('Show password')}
                 >
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
@@ -126,7 +126,7 @@ export default function Login() {
               {loading ? <Loader2 size={18} className="animate-spin" /> : (
                 <>
                   <Zap size={16} />
-                  <span>Sign In</span>
+                  <span>{t('Sign In')}</span>
                 </>
               )}
             </button>
@@ -135,20 +135,20 @@ export default function Login() {
           <div className="auth-assurance-grid">
             <div>
               <ShieldCheck size={16} />
-              <span>Encrypted session</span>
+              <span>{t('Encrypted session')}</span>
             </div>
             <div>
               <BadgeCheck size={16} />
-              <span>{gateway === 'driver' ? 'Driver verified' : 'Provider managed'}</span>
+              <span>{gateway === 'driver' ? t('Driver verified') : t('Provider managed')}</span>
             </div>
           </div>
 
           {gateway === 'driver' ? (
             <div className="auth-link-row">
-              <Link to="/signup">Create driver account</Link>
+              <Link to="/signup">{t('Create driver account')}</Link>
             </div>
           ) : (
-            <p className="muted auth-help-text">Emergency employee accounts are created by service providers.</p>
+            <p className="muted auth-help-text">{t('Emergency employee accounts are created by service providers.')}</p>
           )}
         </section>
       </div>

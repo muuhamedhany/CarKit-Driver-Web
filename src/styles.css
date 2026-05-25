@@ -198,6 +198,9 @@ body {
   right: max(14px, env(safe-area-inset-right));
   bottom: max(14px, env(safe-area-inset-bottom));
   z-index: 120;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 [data-theme='light'] .theme-fab .theme-toggle {
@@ -594,6 +597,26 @@ body::after {
   background: rgba(255, 255, 255, 0.06);
 }
 
+.auth-back-btn {
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--mode-accent, var(--accent-pink)), var(--accent-purple));
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
 .auth-submit {
   width: 100%;
   min-height: 52px;
@@ -754,6 +777,9 @@ body::after {
 }
 
 .auth-submit-dock {
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
   position: sticky;
   bottom: 0;
   padding-top: 14px;
@@ -945,6 +971,18 @@ textarea {
   background: rgba(239, 68, 68, 0.22);
 }
 
+.button.purple {
+  background: linear-gradient(135deg, var(--accent-purple-dark, #411977), var(--accent-purple, #5923A0));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(89, 35, 160, 0.35);
+}
+
+.button.purple:hover:not(:disabled) {
+  box-shadow: 0 0 30px rgba(89, 35, 160, 0.55);
+  transform: translateY(-1px);
+}
+
 .button.small {
   padding: 8px 14px;
   font-size: var(--text-xs);
@@ -960,6 +998,7 @@ textarea {
   opacity: 0.4;
   cursor: not-allowed;
   transform: none !important;
+  box-shadow: none !important;
 }
 
 /* ─── Gateway Tabs ───────────────────────────────────── */
@@ -2236,6 +2275,18 @@ textarea:focus {
   color: #ffb09b;
 }
 
+.button.purple {
+  background: linear-gradient(135deg, var(--accent-purple-dark, #411977), var(--accent-purple, #5923A0));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--glow-purple);
+}
+
+.button.purple:hover:not(:disabled) {
+  box-shadow: 0 0 30px rgba(89, 35, 160, 0.55);
+  transform: translateY(-1px);
+}
+
 .page-stack {
   gap: 16px;
 }
@@ -2771,6 +2822,40 @@ textarea:focus {
 [data-theme='light'] .button:hover {
   background: rgba(15, 23, 42, 0.08);
   border-color: rgba(15, 23, 42, 0.15);
+}
+
+[data-theme='light'] .button.purple {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-purple-light)) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(84, 32, 153, 0.2) !important;
+}
+
+[data-theme='light'] .button.purple:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(84, 32, 153, 0.35) !important;
+}
+
+[data-theme='light'] .app-sticky-action {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.95) 45%) !important;
+}
+
+[data-theme='light'] .map-card {
+  background: var(--surface-muted) !important;
+  border-color: var(--card-border) !important;
+}
+
+[data-theme='light'] .map-grid {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  background-image:
+    linear-gradient(rgba(205, 66, 168, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(205, 66, 168, 0.08) 1px, transparent 1px) !important;
+}
+
+[data-theme='light'] .section-label.green {
+  color: var(--accent-green) !important;
+}
+
+[data-theme='light'] .section-label.purple {
+  color: var(--accent-purple) !important;
 }
 
 [data-theme='light'] .status-pill.online {

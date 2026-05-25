@@ -3,14 +3,16 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Activity, AlertTriangle, MapPin, RefreshCw, Timer, Wifi, WifiOff, Zap } from 'lucide-react';
 import { API_URL, useAuth } from '../contexts/AuthContext';
-
+import { useLanguage } from '../contexts/LanguageContext';
+ 
 export default function EmergencyDashboard() {
   const { headers, user, refreshProfile } = useAuth();
+  const { t } = useLanguage();
   const [feed, setFeed] = useState([]);
   const [active, setActive] = useState(null);
   const [online, setOnline] = useState(Boolean(user?.is_online));
   const [tick, setTick] = useState(Date.now());
-
+ 
   const updateLocation = () => {
     if (!online || !navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition((position) => {
@@ -20,7 +22,7 @@ export default function EmergencyDashboard() {
       }, { headers }).catch(() => {});
     });
   };
-
+ 
   const load = async () => {
     const [feedRes, activeRes] = await Promise.all([
       online ? axios.get(`${API_URL}/emergency/requests/feed`, { headers }) : Promise.resolve({ data: { data: [] } }),
@@ -29,12 +31,12 @@ export default function EmergencyDashboard() {
     setFeed(feedRes.data?.data || []);
     setActive(activeRes.data?.data || null);
   };
-
+ 
   const accept = async (id) => {
     await axios.post(`${API_URL}/emergency/requests/${id}/accept`, {}, { headers });
     await load();
   };
-
+ 
   const toggleOnline = async () => {
     if (online) {
       await axios.post(`${API_URL}/emergency/employees/go-offline`, {}, { headers });
@@ -45,7 +47,7 @@ export default function EmergencyDashboard() {
     }
     refreshProfile();
   };
-
+ 
   useEffect(() => {
     load();
     updateLocation();
@@ -54,14 +56,14 @@ export default function EmergencyDashboard() {
     const tickId = setInterval(() => setTick(Date.now()), 1000);
     return () => { clearInterval(feedId); clearInterval(locId); clearInterval(tickId); };
   }, [online]);
-
+ 
   return (
     <div className="page-stack">
       <div className="screen-heading">
         <div className="screen-heading-main">
           
           <div className="screen-title-copy">
-            <h2>Incoming Requests</h2>
+            <h2>{t('Incoming Requests')}</h2>
           </div>
         </div>
         <button
@@ -69,25 +71,25 @@ export default function EmergencyDashboard() {
           onClick={toggleOnline}
         >
           {online ? <WifiOff size={15} /> : <Wifi size={15} />}
-          {online ? 'Go Offline' : 'Go Online'}
+          {online ? t('Go Offline') : t('Go Online')}
         </button>
       </div>
-
+ 
       <div className={`banner status-banner ${online ? '' : 'warning'}`}>
         <span className={`status-dot ${online ? 'online' : 'pending'}`} />
         <span>
-          {online ? 'ONLINE - receiving requests' : 'You are OFFLINE - no requests visible'}
+          {online ? t('ONLINE - receiving requests') : t('You are OFFLINE - no requests visible')}
         </span>
       </div>
-
+ 
       {active && (
         <Link className="active-banner" to="/emergency/active">
           <Zap size={18} />
-          <span>Active emergency job #{active.request_id} - tap to manage</span>
+          <span>{t('Active emergency job #')}{active.request_id}{t(' - tap to manage')}</span>
           <AlertTriangle size={14} className="ml-auto animate-pulse" />
         </Link>
       )}
-
+ 
       {/* Request cards */}
       <div className="card-grid">
         {feed.map((request, i) => {
@@ -101,8 +103,8 @@ export default function EmergencyDashboard() {
             >
               <div className="card-header-row">
                 <div>
-                  <strong className="item-title">{request.service_name || request.service_type}</strong>
-                  <p className="compact-meta">Emergency</p>
+                  <strong className="item-title">{t(request.service_name) || t(request.service_type)}</strong>
+                  <p className="compact-meta">{t('Emergency')}</p>
                 </div>
                 <div className="request-countdown">
                   <div className="request-timer">
@@ -120,7 +122,7 @@ export default function EmergencyDashboard() {
                 onClick={() => accept(request.request_id)}
                 disabled={Boolean(active)}
               >
-                <Zap size={14} /> Accept Request
+                <Zap size={14} /> {t('Accept Request')}
               </button>
             </article>
           );
@@ -129,13 +131,13 @@ export default function EmergencyDashboard() {
       {!feed.length && (
         <div className="empty-state">
           <div className="empty-state-icon"><RefreshCw size={32} /></div>
-          <p>{online ? 'No requests right now. Stay online to receive them.' : 'Go online to start receiving emergency requests.'}</p>
+          <p>{online ? t('No requests right now. Stay online to receive them.') : t('Go online to start receiving emergency requests.')}</p>
         </div>
       )}
     </div>
   );
 }
-
+ 
 function secondsLeft(expiresAt, tick) {
   return Math.max(0, Math.ceil((new Date(expiresAt).getTime() - tick) / 1000));
 }

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_ANON;
@@ -18,6 +19,7 @@ function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '
   const [preview, setPreview] = useState(value || null);
   const [uploading, setUploading] = useState(false);
   const [err, setErr] = useState('');
+  const { t } = useLanguage();
 
   const handleFile = async (file) => {
     if (!file) return;
@@ -32,7 +34,7 @@ function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '
     const path = `signup/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
     const { error } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true });
     if (error) {
-      setErr('Upload failed – please try again.');
+      setErr(t('Upload failed – please try again.'));
       setUploading(false);
       return;
     }
@@ -48,9 +50,9 @@ function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '
   return (
     <div className="photo-capture">
       <span className="photo-capture-label">
-        {label}{required && <span style={{ color: 'var(--accent-pink)', marginLeft: 3 }}>*</span>}
+        {t(label)}{required && <span style={{ color: 'var(--accent-pink)', marginLeft: 3 }}>*</span>}
       </span>
-      {sublabel && <span className="photo-capture-sublabel">{sublabel}</span>}
+      {sublabel && <span className="photo-capture-sublabel">{t(sublabel)}</span>}
 
       <div
         className={`photo-capture-zone ${preview ? 'has-preview' : ''} ${err ? 'has-error' : ''}`}
@@ -60,7 +62,7 @@ function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '
         {uploading && (
           <div className="photo-capture-loading">
             <Loader2 size={28} className="animate-spin" />
-            <span>Uploading...</span>
+            <span>{t('Uploading...')}</span>
           </div>
         )}
 
@@ -69,18 +71,18 @@ function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '
             <div className="photo-capture-icon">
               <Icon size={24} />
             </div>
-            <span>Tap to upload or use camera</span>
+            <span>{t('Tap to upload or use camera')}</span>
           </div>
         )}
 
         {!uploading && preview && (
           <>
-            <img src={preview} alt={label} className="photo-capture-preview" />
+            <img src={preview} alt={t(label)} className="photo-capture-preview" />
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); clear(); }}
               className="floating-clear"
-              aria-label={`Remove ${label}`}
+              aria-label={`Remove ${t(label)}`}
             >
               <X size={14} />
             </button>
@@ -97,10 +99,10 @@ function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '
       {!preview && !uploading && (
         <div className="photo-capture-actions">
           <button type="button" onClick={() => fileRef.current?.click()} className="photo-action">
-            <Upload size={13} /> Upload
+            <Upload size={13} /> {t('Upload')}
           </button>
           <button type="button" onClick={() => cameraRef.current?.click()} className="photo-action info">
-            <Camera size={13} /> Camera
+            <Camera size={13} /> {t('Camera')}
           </button>
         </div>
       )}
@@ -111,7 +113,7 @@ function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '
           onClick={() => { clear(); fileRef.current?.click(); }}
           className="button ghost photo-capture-change"
         >
-          <RefreshCcw size={13} /> Retake / Change
+          <RefreshCcw size={13} /> {t('Retake / Change')}
         </button>
       )}
 
@@ -126,6 +128,7 @@ function PhotoCapture({ label, sublabel, icon: Icon, value, onChange, aspect = '
 ───────────────────────────────────────── */
 export default function DriverSignup() {
   const { registerDriver } = useAuth();
+  const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -151,13 +154,13 @@ export default function DriverSignup() {
     setError('');
 
     // validate Step 1 fields
-    if (!form.full_name.trim()) { setError('Full Name is required.'); return; }
-    if (!form.phone.trim()) { setError('Phone Number is required.'); return; }
-    if (!form.email.trim()) { setError('Email Address is required.'); return; }
-    if (!form.vehicle_plate.trim()) { setError('Vehicle Plate is required.'); return; }
-    if (!form.password) { setError('Password is required.'); return; }
-    if (form.password.length < 8) { setError('Password must be at least 8 characters.'); return; }
-    if (form.password !== form.confirm) { setError('Passwords do not match.'); return; }
+    if (!form.full_name.trim()) { setError(t('Full Name is required.')); return; }
+    if (!form.phone.trim()) { setError(t('Phone Number is required.')); return; }
+    if (!form.email.trim()) { setError(t('Email Address is required.')); return; }
+    if (!form.vehicle_plate.trim()) { setError(t('Vehicle Plate is required.')); return; }
+    if (!form.password) { setError(t('Password is required.')); return; }
+    if (form.password.length < 8) { setError(t('Password must be at least 8 characters.')); return; }
+    if (form.password !== form.confirm) { setError(t('Passwords do not match.')); return; }
 
     setStep(2);
   };
@@ -176,14 +179,14 @@ export default function DriverSignup() {
       return;
     }
     setError('');
-    if (!form.id_front_url) { setError('Please capture or upload the front of your national ID (بطاقة – وجه أمامي).'); return; }
-    if (!form.id_back_url) { setError('Please capture or upload the back of your national ID (بطاقة – الظهر).'); return; }
+    if (!form.id_front_url) { setError(t('Please capture or upload the front of your national ID (بطاقة – وجه أمامي).')); return; }
+    if (!form.id_back_url) { setError(t('Please capture or upload the back of your national ID (بطاقة – الظهر).')); return; }
     setLoading(true);
     try {
       await registerDriver(form);
       setSubmitted(true);
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed.');
+      setError(err.response?.data?.message || t('Registration failed.'));
     } finally {
       setLoading(false);
     }
@@ -196,13 +199,12 @@ export default function DriverSignup() {
           <div className="success-icon">
             <CheckCircle2 size={30} />
           </div>
-          <h1>Account Under Review</h1>
+          <h1>{t('Account Under Review')}</h1>
           <p className="muted">
-            Your driver account has been created with <strong>pending approval</strong> status.
-            An admin must verify your ID before you can accept deliveries.
+            {t('Your driver account has been created with pending approval status. An admin must verify your ID before you can accept deliveries.')}
           </p>
           <Link className="button primary w-full" to="/login">
-            <ArrowLeft size={16} /> Back to Login
+            <ArrowLeft size={16} /> {t('Back to Login')}
           </Link>
         </div>
       </div>
@@ -216,18 +218,17 @@ export default function DriverSignup() {
         <section className="auth-card signup-card">
           <div className="auth-card-heading">
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Link to="/login" onClick={handleBackHeader} className="auth-back-mini" aria-label="Back">
+              <Link to="/login" onClick={handleBackHeader} className="auth-back-mini" aria-label={t('Back')}>
                 <ArrowLeft size={16} />
               </Link>
               <div>
-
-                <h2 className="auth-card-title">Create Account</h2>
-                <p className="auth-card-copy">Get approved to start accepting deliveries.</p>
+                <h2 className="auth-card-title">{t('Create Account')}</h2>
+                <p className="auth-card-copy">{t('Get approved to start accepting deliveries.')}</p>
               </div>
             </div>
             <div className="auth-card-brand-badge">
               <div className="auth-logo-mark-mini">CK</div>
-              <span>Driver Onboarding</span>
+              <span>{t('Driver Onboarding')}</span>
             </div>
           </div>
 
@@ -237,7 +238,7 @@ export default function DriverSignup() {
               onClick={() => setStep(1)}
               style={{ cursor: 'pointer' }}
             >
-              1. Info & Vehicle
+              {t('1. Info & Vehicle')}
             </div>
             <div
               className={step === 2 ? 'is-active' : ''}
@@ -250,7 +251,7 @@ export default function DriverSignup() {
                 cursor: (form.full_name.trim() && form.phone.trim() && form.email.trim() && form.vehicle_plate.trim() && form.password && form.password.length >= 8 && form.password === form.confirm) ? 'pointer' : 'not-allowed'
               }}
             >
-              2. Photo Uploads
+              {t('2. Photo Uploads')}
             </div>
           </div>
 
@@ -273,12 +274,12 @@ export default function DriverSignup() {
                     <SectionTitle tone="warning" label="Vehicle Details" icon={Truck} />
                     <div className="form-grid">
                       <label>
-                        <span>Vehicle Type</span>
+                        <span>{t('Vehicle Type')}</span>
                         <select value={form.vehicle_type} onChange={setField('vehicle_type')}>
-                          <option value="motorcycle">Motorcycle</option>
-                          <option value="car">Car</option>
-                          <option value="van">Van</option>
-                          <option value="truck">Truck</option>
+                          <option value="motorcycle">{t('Motorcycle')}</option>
+                          <option value="car">{t('Car')}</option>
+                          <option value="van">{t('Van')}</option>
+                          <option value="truck">{t('Truck')}</option>
                         </select>
                       </label>
                       <Field label="Vehicle Plate" value={form.vehicle_plate} onChange={setField('vehicle_plate')} placeholder="ABC-1234" required />
@@ -288,8 +289,8 @@ export default function DriverSignup() {
                   <div className="auth-section">
                     <SectionTitle tone="purple" label="Security" icon={LockKeyhole} />
                     <div className="form-grid">
-                      <Field label="Password" type="password" value={form.password} onChange={setField('password')} placeholder="Min. 8 characters" required />
-                      <Field label="Confirm Password" type="password" value={form.confirm} onChange={setField('confirm')} placeholder="Repeat password" required />
+                      <Field label="Password" type="password" value={form.password} onChange={setField('password')} placeholder={t('Min. 8 characters')} required />
+                      <Field label="Confirm Password" type="password" value={form.confirm} onChange={setField('confirm')} placeholder={t('Repeat password')} required />
                     </div>
                   </div>
                 </div>
@@ -341,7 +342,7 @@ export default function DriverSignup() {
 
                   <div className="signup-review-note">
                     <ClipboardCheck size={17} />
-                    <span>Your account will stay pending until an admin verifies your uploaded ID.</span>
+                    <span>{t('Your account will stay pending until an admin verifies your uploaded ID.')}</span>
                   </div>
                 </div>
               </>
@@ -361,7 +362,7 @@ export default function DriverSignup() {
                     onClick={() => setStep(1)}
                     className="button ghost auth-back-btn"
                   >
-                    Back
+                    {t('Back')}
                   </button>
                 )}
                 <button
@@ -370,7 +371,7 @@ export default function DriverSignup() {
                   className="auth-submit"
                 >
                   {loading && <Loader2 size={16} className="animate-spin" />}
-                  {loading ? 'Submitting...' : step === 1 ? 'Next Step' : 'Submit for Approval'}
+                  {loading ? t('Submitting...') : step === 1 ? t('Next Step') : t('Submit for Approval')}
                 </button>
               </div>
             </div>
@@ -383,19 +384,21 @@ export default function DriverSignup() {
 
 /* ── helpers ── */
 function SectionTitle({ label, tone = 'pink', icon: Icon }) {
+  const { t } = useLanguage();
   return (
     <h3 className={`auth-section-title ${tone}`}>
       {Icon && <Icon size={15} />}
-      {label}
+      {t(label)}
     </h3>
   );
 }
 
 function Field({ label, value, onChange, type = 'text', placeholder, required }) {
+  const { t } = useLanguage();
   return (
     <label>
-      <span>{label}</span>
-      <input type={type} value={value} onChange={onChange} placeholder={placeholder} required={required} />
+      <span>{t(label)}</span>
+      <input type={type} value={value} onChange={onChange} placeholder={placeholder ? t(placeholder) : ''} required={required} />
     </label>
   );
 }

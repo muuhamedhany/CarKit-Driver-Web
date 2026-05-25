@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import MapTracker from '../components/MapTracker';
 import { Camera, CheckCircle2, MapPin, Package, Phone, Upload, User, X } from 'lucide-react';
 import { API_URL, useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function DriverActiveOrder() {
   const { headers } = useAuth();
+  const { t } = useLanguage();
   const [order, setOrder] = useState(null);
   const [proof, setProof] = useState('');
   const [preview, setPreview] = useState('');
@@ -32,7 +34,7 @@ export default function DriverActiveOrder() {
   const complete = async () => {
     setCompleting(true);
     await axios.post(`${API_URL}/deliveries/${order.order_id}/complete`, { proof_photo_url: proof, notes }, { headers });
-    setMessage('Order marked as delivered successfully!');
+    setMessage(order.is_return ? 'Return delivered successfully!' : 'Order marked as delivered successfully!');
     setOrder(null);
     setCompleting(false);
   };
@@ -41,7 +43,7 @@ export default function DriverActiveOrder() {
     return (
       <div className="empty-state">
         <div className="empty-state-icon"><Package size={36} /></div>
-        <p style={{ fontSize: 'var(--text-base)' }}>No active order right now.</p>
+        <p style={{ fontSize: 'var(--text-base)' }}>{t('No active order right now.')}</p>
       </div>
     );
   }
@@ -52,7 +54,7 @@ export default function DriverActiveOrder() {
         <div className="success-icon">
           <CheckCircle2 size={30} />
         </div>
-        <h1>Delivery Complete</h1>
+        <h1>{t('Delivery Complete')}</h1>
         <div className="banner">{message}</div>
       </div>
     );
@@ -67,13 +69,13 @@ export default function DriverActiveOrder() {
             <Package size={20} />
           </div>
           <div className="screen-title-copy">
-            <p className="app-page-kicker">{order.is_return ? 'Active Return Delivery' : 'Active Delivery'}</p>
-            <h2>{order.is_return ? `Return Order #${order.order_id}` : `Order #${order.order_id}`}</h2>
+            <p className="app-page-kicker">{t(order.is_return ? 'Active Return Delivery' : 'Active Delivery')}</p>
+            <h2>{order.is_return ? `${t('Return Order #')}${order.order_id}` : `${t('Order #')}${order.order_id}`}</h2>
           </div>
         </div>
         <div className="progress">
-          <span className="done">In Transit</span>
-          <span>Delivered</span>
+          <span className="done">{t('In Transit')}</span>
+          <span>{t('Delivered')}</span>
         </div>
       </div>
 
@@ -83,7 +85,7 @@ export default function DriverActiveOrder() {
           <MapTracker 
             lat={order.is_return ? Number(order.workshop_latitude) : Number(order.shipping_latitude)} 
             lng={order.is_return ? Number(order.workshop_longitude) : Number(order.shipping_longitude)} 
-            label={order.is_return ? 'Vendor branch location' : 'Customer location'} 
+            label={order.is_return ? t('Return To (Vendor Branch)') : t('Customer Details')} 
           />
 
           <div style={{ marginTop: 16 }}>
@@ -91,22 +93,22 @@ export default function DriverActiveOrder() {
               <div className="upload-action-grid">
                 <label className="upload-action">
                   <Upload size={15} style={{ color: 'var(--accent-purple)', flexShrink: 0 }} />
-                  Upload Proof
+                  {t('Upload Proof')}
                   <input type="file" accept="image/*" onChange={pickProof} style={{ display: 'none' }} />
                 </label>
                 <label className="upload-action info">
                   <Camera size={15} style={{ color: 'var(--accent-blue)', flexShrink: 0 }} />
-                  Take Photo
+                  {t('Take Photo')}
                   <input type="file" accept="image/*" capture="environment" onChange={pickProof} style={{ display: 'none' }} />
                 </label>
               </div>
             ) : (
               <div style={{ position: 'relative', marginBottom: 12 }}>
-                <img src={preview} alt="Proof preview" className="proof-preview" />
+                <img src={preview} alt={t('Proof preview')} className="proof-preview" />
                 <button
                   onClick={clearProof}
                   className="floating-clear"
-                  aria-label="Remove proof photo"
+                  aria-label={t('Remove proof photo')}
                 >
                   <X size={14} />
                 </button>
@@ -114,7 +116,7 @@ export default function DriverActiveOrder() {
             )}
 
             <textarea
-              placeholder="Delivery notes (optional)..."
+              placeholder={t('Delivery notes (optional)...')}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               style={{ marginBottom: 12 }}
@@ -128,7 +130,7 @@ export default function DriverActiveOrder() {
                 style={{ width: '100%', justifyContent: 'center' }}
               >
                 <CheckCircle2 size={16} />
-                {completing ? 'Completing...' : order.is_return ? 'Mark Return Delivered' : 'Mark as Delivered'}
+                {completing ? t('Completing...') : order.is_return ? t('Mark Return Delivered') : t('Mark as Delivered')}
               </button>
             </div>
           </div>
@@ -141,7 +143,7 @@ export default function DriverActiveOrder() {
             {order.is_return ? (
               <>
                 <h3 className="section-label purple">
-                  <User size={12} /> Pickup From (Customer)
+                  <User size={12} /> {t('Pickup From (Customer)')}
                 </h3>
                 <p className="item-title">{order.customer_name}</p>
                 <p className="meta-line">
@@ -154,7 +156,7 @@ export default function DriverActiveOrder() {
 
                 <div className="divider-soft" style={{ marginTop: 16, paddingTop: 16 }}>
                   <h3 className="section-label pink">
-                    <MapPin size={12} /> Return To (Vendor Branch)
+                    <MapPin size={12} /> {t('Return To (Vendor Branch)')}
                   </h3>
                   <p className="item-title">{order.vendor_name || 'Vendor Branch'}</p>
                   <p className="meta-line" style={{ color: 'var(--text-secondary)' }}>
@@ -166,7 +168,7 @@ export default function DriverActiveOrder() {
             ) : (
               <>
                 <h3 className="section-label purple">
-                  <User size={12} /> Customer Details
+                  <User size={12} /> {t('Customer Details')}
                 </h3>
                 <p className="item-title">{order.customer_name}</p>
                 <p className="meta-line">
@@ -181,7 +183,7 @@ export default function DriverActiveOrder() {
 
             <div className="divider-soft">
               <h3 className="section-label blue">
-                <Package size={12} /> Order Items
+                <Package size={12} /> {t('Order Items')}
               </h3>
               <ul className="item-list compact-list">
                 {(order.items || []).map((item) => (

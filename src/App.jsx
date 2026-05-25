@@ -13,6 +13,7 @@ import EmergencyActiveJob from './pages/EmergencyActiveJob';
 import EmergencyHistory from './pages/EmergencyHistory';
 import EmergencyProfile from './pages/EmergencyProfile';
 import ThemeToggle from './components/ThemeToggle';
+import LanguageToggle from './components/LanguageToggle';
 
 function IndexRedirect() {
   const { role, isAuthenticated } = useAuth();
@@ -26,11 +27,10 @@ export default function App() {
 
   return (
     <AuthProvider>
-      {!isAuthPage && (
-        <div className="theme-fab">
-          <ThemeToggle compact />
-        </div>
-      )}
+      <div className="theme-fab">
+        <LanguageToggle compact />
+        <ThemeToggle compact />
+      </div>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<DriverSignup />} />
