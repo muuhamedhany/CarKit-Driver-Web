@@ -198,17 +198,19 @@ export default function DriverSignup() {
   if (submitted) {
     return (
       <div className="auth-page animate-fade-in">
-        <div className="auth-card success-state">
-          <div className="success-icon">
-            <CheckCircle2 size={30} />
+        <div className="auth-container">
+          <div className="auth-card success-state">
+            <div className="success-icon">
+              <CheckCircle2 size={30} />
+            </div>
+            <h1>{t('Account Under Review')}</h1>
+            <p className="muted">
+              {t('Your driver account has been created with pending approval status. An admin must verify your ID before you can accept deliveries.')}
+            </p>
+            <Link className="button primary w-full" to="/login">
+              <ArrowLeft size={16} /> {t('Back to Login')}
+            </Link>
           </div>
-          <h1>{t('Account Under Review')}</h1>
-          <p className="muted">
-            {t('Your driver account has been created with pending approval status. An admin must verify your ID before you can accept deliveries.')}
-          </p>
-          <Link className="button primary w-full" to="/login">
-            <ArrowLeft size={16} /> {t('Back to Login')}
-          </Link>
         </div>
       </div>
     );
