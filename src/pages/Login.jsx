@@ -3,6 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AlertCircle, BadgeCheck, Eye, EyeOff, KeyRound, Loader2, Mail, ShieldCheck, Truck, Wrench, Zap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import ThemeToggle from '../components/ThemeToggle';
+import LanguageToggle from '../components/LanguageToggle';
+
+
 
 export default function Login() {
   const [gateway, setGateway] = useState('driver');
@@ -40,6 +44,13 @@ export default function Login() {
   return (
     <div className="auth-page" style={{ '--mode-accent': modeAccent }}>
       <div className="auth-grid-overlay" />
+
+      {/* Top right language & theme toggle */}
+      <div className="auth-theme-toggle-wrapper">
+        <LanguageToggle />
+        <ThemeToggle />
+      </div>
+
       <div className="auth-container animate-fade-in">
         <section className={`auth-card auth-card-${gateway === 'driver' ? 'driver' : 'emergency'} auth-login-card`}>
           <div className="auth-card-heading">

@@ -10,11 +10,28 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const raw = localStorage.getItem('carkit_driver_portal_session');
+    const lastActive = localStorage.getItem('carkit_driver_portal_last_active');
+    
+    const maxInactivity = 2 * 60 * 60 * 1000; // 2 hours for drivers/emergency staff
+    const now = Date.now();
+
     if (raw) {
       try {
-        setSession(JSON.parse(raw));
+        const parsed = JSON.parse(raw);
+        // Bypass idle logout if they are on an active job or emergency employee is marked online
+        const isOnActiveJob = window.location.pathname.includes('/active');
+        const isOnlineEmergency = parsed?.role === 'emergency_employee' && parsed?.user?.is_online;
+        
+        if (lastActive && now - parseInt(lastActive, 10) > maxInactivity && !isOnActiveJob && !isOnlineEmergency) {
+          localStorage.removeItem('carkit_driver_portal_session');
+          localStorage.removeItem('carkit_driver_portal_last_active');
+        } else {
+          setSession(parsed);
+          localStorage.setItem('carkit_driver_portal_last_active', now.toString());
+        }
       } catch {
         localStorage.removeItem('carkit_driver_portal_session');
+        localStorage.removeItem('carkit_driver_portal_last_active');
       }
     }
     setLoading(false);
@@ -22,7 +39,13 @@ export function AuthProvider({ children }) {
 
   const persist = (nextSession) => {
     setSession(nextSession);
-    localStorage.setItem('carkit_driver_portal_session', JSON.stringify(nextSession));
+    if (nextSession) {
+      localStorage.setItem('carkit_driver_portal_session', JSON.stringify(nextSession));
+      localStorage.setItem('carkit_driver_portal_last_active', Date.now().toString());
+    } else {
+      localStorage.removeItem('carkit_driver_portal_session');
+      localStorage.removeItem('carkit_driver_portal_last_active');
+    }
   };
 
   const login = async (gateway, credentials) => {
@@ -58,7 +81,46 @@ export function AuthProvider({ children }) {
     }
     setSession(null);
     localStorage.removeItem('carkit_driver_portal_session');
+    localStorage.removeItem('carkit_driver_portal_last_active');
   };
+
+  // Activity tracking for Driver Web
+  useEffect(() => {
+    if (!session?.token) return;
+
+    const maxInactivity = 2 * 60 * 60 * 1000; // 2 hours
+
+    const updateActivity = () => {
+      localStorage.setItem('carkit_driver_portal_last_active', Date.now().toString());
+    };
+
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+    events.forEach(event => {
+      window.addEventListener(event, updateActivity);
+    });
+
+    const interval = setInterval(() => {
+      const lastActive = localStorage.getItem('carkit_driver_portal_last_active');
+      const isOnActiveJob = window.location.pathname.includes('/active');
+      const isOnlineEmergency = session?.role === 'emergency_employee' && session?.user?.is_online;
+
+      if (lastActive && Date.now() - parseInt(lastActive, 10) > maxInactivity) {
+        if (!isOnActiveJob && !isOnlineEmergency) {
+          logout();
+        } else {
+          // Bypassed: update activity time so we don't trigger this continuously while active
+          updateActivity();
+        }
+      }
+    }, 10000);
+
+    return () => {
+      events.forEach(event => {
+        window.removeEventListener(event, updateActivity);
+      });
+      clearInterval(interval);
+    };
+  }, [session?.token, session?.role, session?.user?.is_online]);
 
   const value = useMemo(() => ({
     session,

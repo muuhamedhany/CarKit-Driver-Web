@@ -7,6 +7,9 @@ import {
 import { createClient } from '@supabase/supabase-js';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import ThemeToggle from '../components/ThemeToggle';
+import LanguageToggle from '../components/LanguageToggle';
+
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_ANON;
@@ -214,6 +217,13 @@ export default function DriverSignup() {
   return (
     <div className="auth-page">
       <div className="auth-grid-overlay" />
+
+      {/* Top right language & theme toggle */}
+      <div className="auth-theme-toggle-wrapper">
+        <LanguageToggle />
+        <ThemeToggle />
+      </div>
+
       <div className="auth-container signup-container animate-fade-in">
         <section className="auth-card signup-card">
           <div className="auth-card-heading">

@@ -27,10 +27,12 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <div className="theme-fab">
-        <LanguageToggle compact />
-        <ThemeToggle compact />
-      </div>
+      {!isAuthPage && (
+        <div className="theme-fab">
+          <LanguageToggle compact />
+          <ThemeToggle compact />
+        </div>
+      )}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<DriverSignup />} />

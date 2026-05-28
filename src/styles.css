@@ -234,13 +234,13 @@ body {
   display: none;
 }
 
-/* deprecated class kept harmless if referenced elsewhere */
-.auth-theme-toggle {
-  position: fixed;
-  right: max(14px, env(safe-area-inset-right));
-  bottom: max(14px, env(safe-area-inset-bottom));
-  z-index: 25;
+.auth-theme-toggle-wrapper {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 10;
 }
+
 
 h1,
 h2,
